@@ -2,8 +2,8 @@
 
 connected= true
 
-#while $connected:
-#do
+while $connected:
+do
 	 
 	ping_result=$(timeout 3  ping -c1 www.google.com | tail -1 | awk '{print $4}' | cut -d '/' -f 2)
 	clean_result=${ping_result%.*}
@@ -14,7 +14,7 @@ connected= true
 		#continue
 	else
 		connected= false
-		export outage_begin= $(date)
+		outage_begin= $(date)
 		while ["$connected" == "false"]: 
 		do
 			reconnect= $(timeout 3 ping -c1 google)
@@ -23,10 +23,11 @@ connected= true
 				continue
 			else
 				connected= true
-				export outage_end=$(date)
+				outage_end=$(date)
+				echo "$outage_begin" \t "$outage_end" >> records.txt
 				break
 			fi
 
 		done
 	fi
-#done
+done
